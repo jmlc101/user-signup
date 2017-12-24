@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect
-#is it?
-#import username_is_valid
-#or?
-#from username_is_valid import username_is_valid
+from password_is_valid import password_is_valid
+from username_is_valid import username_is_valid
+from verify_pass import verify_pass
 import cgi
 
 app = Flask(__name__)
@@ -10,11 +9,8 @@ app.config['DEBUG'] = True
 
 @app.route("/")
 def index():
-    encoded_error = request.args.get("name_error")
-    encoded_error = request.args.get("pass_error")
-    encoded_error = request.args.get("verify_pass_error")
-    encoded_error = request.args.get("email_error")
-    return render_template('welcome.html',  error=encoded_error and cgi.escape(encoded_error, quote=True))
+    return render_template('signup.html')
+
 
 @app.route("/signup", methods=['POST'])
 def add_movie():
@@ -23,17 +19,27 @@ def add_movie():
     password = request.form['password']
     verify = request.form['verify']
     email = request.form['email']
+    name_error_msg = "That's not a valid username"
+    pass_error_msg = "That's not a valid password"
+    nonmatch_error = "Passwords do not match"
+    
+    if username_is_valid(username) == False:
+        if password_is_valid(password) == False:
+            return render_template("signup.html", user_name_error=name_error_msg, pass_error=pass_error_msg)
+        elif password_is_valid(password):
+            if verify_pass(password, verify) == False:
+                return render_template("signup.html", password=password, user_name_error=name_error_msg, verify_pass_error=nonmatch_error)
+            elif verify_pass(password, verify):
+                return render_template("signup.html", password=password, user_name_error=name_error_msg)
+    elif username_is_valid(username):
+        if password_is_valid(password) == False:
+            return render_template("signup.html", name=username, pass_error=pass_error_msg)
+        elif password_is_valid(password):
+            if verify_pass(password, verify) == False:
+                return render_template("signup.html", name=username, password=password, verify_pass_error=nonmatch_error)
+            elif verify_pass(password, verify):
+                return render_template("welcome.html", name=username)
 
-    # if the user typed nothing at all, redirect and tell them the error
-    if (not username) or (username.strip() == ""):
-        name_error = "Please Enter a Username."
-        return redirect("/?error=" + error)
-
-    if new_movie in terrible_movies:
-        error = "Trust me, you don't want to add '{0}' to your Watchlist".format(new_movie)
-        return redirect("/?error=" + error)
-
-    # 'escape' the user's input so that if they typed HTML, it doesn't mess up our site
     new_movie_escaped = cgi.escape(new_movie, quote=True)
 
 
