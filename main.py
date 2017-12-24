@@ -14,7 +14,7 @@ def index():
 
 
 @app.route("/signup", methods=['POST'])
-def add_movie():
+def signup():
     username = request.form['username']
     password = request.form['password']
     verify = request.form['verify']
@@ -23,8 +23,7 @@ def add_movie():
     pass_error_msg = "That's not a valid password"
     nonmatch_error = "Passwords do not match"
     email_err = "That's not a valid email"
-
-     
+  
     if email == '':
         if username_is_valid(username) == False:
             if password_is_valid(password) == False:
@@ -76,10 +75,6 @@ def add_movie():
                     if verify_pass(password, verify) == False:
                         return render_template("signup.html", email_error=email_err, name=username, verify_pass_error=nonmatch_error)
                     elif verify_pass(password, verify):
-                        return render_template("signup.html", email_error=email_err)
-
-
-
-
+                        return render_template("signup.html", name=username, email_error=email_err)
 
 app.run()
