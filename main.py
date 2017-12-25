@@ -8,7 +8,6 @@ app.config['DEBUG'] = True
 def index():
     return render_template('signup.html')
 
-
 @app.route("/signup", methods=['POST'])
 def signup():
     username = request.form['username']
@@ -27,7 +26,6 @@ def signup():
     if username == '':
         username = ' '
     
-
     tple = username, password, verify
     string = ' '.join(tple)
     tple2 = username, password
