@@ -18,12 +18,12 @@ def signup():
     pass_error_msg = "That's not a valid password"
     nonmatch_error = "Passwords do not match"
     email_err = "That's not a valid email"
-
-    if password == '':
+    regex = re.compile(r"\w{3,20}")
+    if (password == '') or (regex.search(password) == None):
         password = ' '
-    if verify == '':
+    if (verify == '') or (regex.search(verify) == None):
         verify = ' '
-    if username == '':
+    if (username == '') or (regex.search(username) == None):
         username = ' '
     
     tple = username, password, verify
@@ -33,9 +33,10 @@ def signup():
     regex2 = r"([\w\W]+) ([\w\W]+)"
     regex3 = r"([\w\W]+) ([\w\W]+) ([\w\W]+)"
     email_regex = r"^\w+@\w+\.\w+$"
-    regex = re.compile(r"\w{3,20}")
+    
     grps = re.search(regex3, string)
     grps2 = re.search(regex2, string2)
+
 
     if regex.search(grps.group(1)) and regex.search(grps.group(2)) and (password == verify):
         if (regex.search(email) and re.search(email_regex, email)) or (email == ''):
@@ -47,7 +48,7 @@ def signup():
             return render_template("signup.html", email=email, name=username, verify_pass_error=nonmatch_error)
         else:
             return render_template("signup.html", name=username, verify_pass_error=nonmatch_error, email_error=email_err)
-    elif regex.search(username):
+    elif re.search(regex, username):
         if (regex.search(email) and re.search(email_regex, email)) or (email == ''):
             return render_template("signup.html", email=email, name=username, pass_error=pass_error_msg)
         else:
