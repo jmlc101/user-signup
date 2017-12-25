@@ -18,7 +18,12 @@ def signup():
     pass_error_msg = "That's not a valid password"
     nonmatch_error = "Passwords do not match"
     email_err = "That's not a valid email"
+
     regex = re.compile(r"\w{3,20}")
+    regex2 = r"([\w\W]+) ([\w\W]+)"
+    regex3 = r"([\w\W]+) ([\w\W]+) ([\w\W]+)"
+    email_regex = r"^\w+@\w+\.\w+$"
+    
     if (password == '') or (regex.search(password) == None):
         password = ' '
     if (verify == '') or (regex.search(verify) == None):
@@ -30,13 +35,8 @@ def signup():
     string = ' '.join(tple)
     tple2 = username, password
     string2 = ' '.join(tple2)
-    regex2 = r"([\w\W]+) ([\w\W]+)"
-    regex3 = r"([\w\W]+) ([\w\W]+) ([\w\W]+)"
-    email_regex = r"^\w+@\w+\.\w+$"
-    
     grps = re.search(regex3, string)
     grps2 = re.search(regex2, string2)
-
 
     if regex.search(grps.group(1)) and regex.search(grps.group(2)) and (password == verify):
         if (regex.search(email) and re.search(email_regex, email)) or (email == ''):
